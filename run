@@ -27,7 +27,7 @@ $RUN mermaid sh -c "pnpm $args"
 ;;
 
 dev)
-$RUN --service-ports mermaid sh -c "pnpm run dev"
+docker compose run --rm -p 9000:9000 mermaid sh -c "pnpm run dev"
 ;;
 
 docs:dev)

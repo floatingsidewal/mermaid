@@ -5,6 +5,8 @@ export {
   PacketBlock,
   Pie,
   PieSection,
+  Funnel,
+  FunnelSection,
   Architecture,
   GitGraph,
   Radar,
@@ -18,6 +20,8 @@ export {
   isPacketBlock,
   isPie,
   isPieSection,
+  isFunnel,
+  isFunnelSection,
   isArchitecture,
   isGitGraph,
   isTreemap,
@@ -31,6 +35,7 @@ export {
   MermaidGeneratedSharedModule,
   PacketGeneratedModule,
   PieGeneratedModule,
+  FunnelGeneratedModule,
   ArchitectureGeneratedModule,
   GitGraphGeneratedModule,
   RadarGeneratedModule,
@@ -42,6 +47,7 @@ export * from './common/index.js';
 export * from './info/index.js';
 export * from './packet/index.js';
 export * from './pie/index.js';
+export * from './funnel/index.js';
 export * from './architecture/index.js';
 export * from './radar/index.js';
 export * from './treemap/index.js';

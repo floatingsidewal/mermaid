@@ -5,6 +5,7 @@ import kanban from './examples/kanban.js';
 import classDiagram from './examples/class.js';
 import sequenceDiagram from './examples/sequence.js';
 import pieDiagram from './examples/pie.js';
+import funnelDiagram from './examples/funnel.js';
 import userJourneyDiagram from './examples/user-journey.js';
 import mindmapDiagram from './examples/mindmap.js';
 import requirementDiagram from './examples/requirement.js';
@@ -29,6 +30,7 @@ export const diagramData: DiagramMetadata[] = [
   classDiagram,
   sequenceDiagram,
   pieDiagram,
+  funnelDiagram,
   userJourneyDiagram,
   mindmapDiagram,
   requirementDiagram,

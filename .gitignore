@@ -53,3 +53,5 @@ vite.config.ts.timestamp-*
 
 # autogenereated by langium-cli
 generated/
+playwright.config.ts
+tests/e2e/

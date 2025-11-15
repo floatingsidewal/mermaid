@@ -286,6 +286,8 @@ properties:
     $ref: '#/$defs/ErDiagramConfig'
   pie:
     $ref: '#/$defs/PieDiagramConfig'
+  funnel:
+    $ref: '#/$defs/FunnelDiagramConfig'
   quadrantChart:
     $ref: '#/$defs/QuadrantChartConfig'
   xyChart:
@@ -1020,6 +1022,47 @@ $defs: # JSON Schema definition (maybe we should move these to a separate file)
         description: |
           Axial position of slice's label from zero at the center to 1 at the outside edges.
         default: 0.75
+
+  FunnelDiagramConfig:
+    title: Funnel Diagram Config
+    allOf: [{ $ref: '#/$defs/BaseDiagramConfig' }]
+    type: object
+    unevaluatedProperties: false
+    properties:
+      funnelWidth:
+        type: number
+        minimum: 0
+        description: |
+          The width of the funnel diagram.
+        default: 500
+      funnelHeight:
+        type: number
+        minimum: 0
+        description: |
+          The height of the funnel diagram.
+        default: 600
+      autoNumbering:
+        type: boolean
+        description: |
+          Automatically number stages sequentially (01, 02, 03...).
+        default: true
+      notePosition:
+        type: string
+        enum: ['alternating', 'left', 'right']
+        description: |
+          Position of stage notes/descriptions: alternating (left/right), left-only, or right-only.
+        default: 'alternating'
+      showNoteConnectors:
+        type: boolean
+        description: |
+          Show connector lines from notes to stages.
+        default: true
+      noteMaxWidth:
+        type: number
+        minimum: 0
+        description: |
+          Maximum width of note containers in pixels.
+        default: 200
 
   QuadrantChartConfig:
     title: Quadrant Chart Config

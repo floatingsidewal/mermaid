@@ -17,6 +17,11 @@
       "fileExtensions": [".mmd", ".mermaid"]
     },
     {
+      "id": "funnel",
+      "grammar": "src/language/funnel/funnel.langium",
+      "fileExtensions": [".mmd", ".mermaid"]
+    },
+    {
       "id": "architecture",
       "grammar": "src/language/architecture/architecture.langium",
       "fileExtensions": [".mmd", ".mermaid"]

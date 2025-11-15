@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Mermaid Funnel Chart Demo</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=" />
+    <style>
+      div.mermaid {
+        font-family: 'Courier New', Courier, monospace !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Funnel chart demos</h1>
+
+    <h2>Basic Sales Pipeline</h2>
+    <pre class="mermaid">
+      funnel title Sales Pipeline
+        accTitle: Q1 2024 Sales Funnel
+        accDescr: This funnel shows the sales conversion from leads to closed deals
+        "Leads": 1000
+        "Qualified": 500
+        "Proposal": 200
+        "Negotiation": 100
+        "Closed": 50
+    </pre>
+
+    <hr />
+
+    <h2>Marketing Funnel with Data Labels</h2>
+    <pre class="mermaid">
+      funnel showData
+        title Marketing Funnel
+        accTitle: User Acquisition Funnel
+        accDescr: This shows the conversion from website visits to paying customers
+        "Website Visits": 10000
+        "Sign-ups": 1000
+        "Active Users": 500
+        "Paying Customers": 100
+    </pre>
+
+    <hr />
+
+    <h2>Recruitment Process</h2>
+    <pre class="mermaid">
+      funnel title Hiring Funnel
+        "Applications": 500
+        "Phone Screens": 100
+        "Technical Interviews": 50
+        "On-site Interviews": 25
+        "Offers": 10
+        "Acceptances": 8
+    </pre>
+
+    <hr />
+
+    <h2>E-commerce Conversion with Data</h2>
+    <pre class="mermaid">
+      funnel showData
+        title E-commerce Conversion
+        "Product Views": 50000
+        "Add to Cart": 5000
+        "Checkout Started": 2000
+        "Payment Completed": 1500
+    </pre>
+
+    <hr />
+
+    <h2>User Onboarding Flow</h2>
+    <pre class="mermaid">
+      funnel title User Onboarding
+        accTitle: User Onboarding Funnel
+        accDescr: Shows how users progress through the onboarding process
+        "Impressions": 100000
+        "Clicks": 10000
+        "Registrations": 1000
+        "Activations": 500
+        "Retained Users": 250
+    </pre>
+
+    <hr />
+
+    <h2>Custom Configuration</h2>
+    <pre class="mermaid">
+      %%{init: {"funnel": {"funnelWidth": 600, "funnelHeight": 700}}}%%
+      funnel showData
+        title Custom Sized Funnel
+        "Stage 1": 1000
+        "Stage 2": 800
+        "Stage 3": 600
+        "Stage 4": 400
+        "Stage 5": 200
+    </pre>
+
+    <hr />
+
+    <h2>Funnel with Custom Colors</h2>
+    <pre class="mermaid">
+      funnel title Marketing Campaign
+        "Awareness": 10000
+        [color: "#FF6B6B"]
+        "Interest": 5000
+        [color: "#4ECDC4"]
+        "Consideration": 2000
+        [color: "#45B7D1"]
+        "Conversion": 500
+        [color: "#96CEB4"]
+    </pre>
+
+    <hr />
+
+    <h2>Funnel with Stage Notes</h2>
+    <pre class="mermaid">
+      funnel title Customer Journey
+        "Awareness": 5000
+        desc "Customer discovers the brand"
+        desc "Through marketing channels"
+        "Interest": 2000
+        desc "Customer shows interest"
+        desc "Engages with content"
+        "Decision": 500
+        desc "Customer makes purchase"
+    </pre>
+
+    <hr />
+
+    <h2>Funnel with Custom Numbering</h2>
+    <pre class="mermaid">
+      funnel title Product Development
+        "Planning": 100
+        [number: "A1"]
+        "Design": 80
+        [number: "B2"]
+        "Development": 60
+        [number: "C3"]
+        "Testing": 40
+        [number: "D4"]
+        "Launch": 20
+        [number: "E5"]
+    </pre>
+
+    <hr />
+
+    <h2>Complete Funnel with All Features</h2>
+    <pre class="mermaid">
+      funnel showData
+        title Complete Sales Funnel
+        "Lead Generation": 1000
+        desc "Marketing campaigns drive traffic"
+        desc "Multiple channels: SEO, Ads, Social"
+        [color: "#FF6B6B"]
+        [number: "01"]
+        "Lead Qualification": 500
+        desc "Sales team reviews leads"
+        desc "Scoring and prioritization"
+        [color: "#4ECDC4"]
+        [number: "02"]
+        "Proposal": 200
+        desc "Custom solutions presented"
+        [color: "#45B7D1"]
+        [number: "03"]
+        "Negotiation": 100
+        desc "Terms and pricing discussion"
+        [color: "#96CEB4"]
+        [number: "04"]
+        "Closed Won": 50
+        desc "Contract signed"
+        [color: "#FFEAA7"]
+        [number: "05"]
+    </pre>
+
+    <script type="module">
+      import mermaid from '/mermaid.esm.mjs';
+      mermaid.initialize({
+        theme: 'default',
+        logLevel: 3,
+        securityLevel: 'loose',
+      });
+    </script>
+  </body>
+</html>

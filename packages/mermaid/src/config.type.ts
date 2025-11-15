@@ -198,6 +198,7 @@ export interface MermaidConfig {
   state?: StateDiagramConfig;
   er?: ErDiagramConfig;
   pie?: PieDiagramConfig;
+  funnel?: FunnelDiagramConfig;
   quadrantChart?: QuadrantChartConfig;
   xyChart?: XYChartConfig;
   requirement?: RequirementDiagramConfig;
@@ -865,6 +866,42 @@ export interface PieDiagramConfig extends BaseDiagramConfig {
    *
    */
   textPosition?: number;
+}
+/**
+ * This interface was referenced by `MermaidConfig`'s JSON-Schema
+ * via the `definition` "FunnelDiagramConfig".
+ */
+export interface FunnelDiagramConfig extends BaseDiagramConfig {
+  /**
+   * The width of the funnel diagram.
+   *
+   */
+  funnelWidth?: number;
+  /**
+   * The height of the funnel diagram.
+   *
+   */
+  funnelHeight?: number;
+  /**
+   * Automatically number stages sequentially (01, 02, 03...).
+   *
+   */
+  autoNumbering?: boolean;
+  /**
+   * Position of stage notes/descriptions: alternating (left/right), left-only, or right-only.
+   *
+   */
+  notePosition?: 'alternating' | 'left' | 'right';
+  /**
+   * Show connector lines from notes to stages.
+   *
+   */
+  showNoteConnectors?: boolean;
+  /**
+   * Maximum width of note containers in pixels.
+   *
+   */
+  noteMaxWidth?: number;
 }
 /**
  * This interface was referenced by `MermaidConfig`'s JSON-Schema

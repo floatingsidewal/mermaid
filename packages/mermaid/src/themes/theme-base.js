@@ -231,6 +231,34 @@ class Theme {
     this.pieOuterStrokeColor = this.pieOuterStrokeColor || 'black';
     this.pieOpacity = this.pieOpacity || '0.7';
 
+    /* funnel */
+    // Using vibrant colors for good contrast with white text
+    this.funnel1 = this.funnel1 || '#5470c6';
+    this.funnel2 = this.funnel2 || '#91cc75';
+    this.funnel3 = this.funnel3 || '#fac858';
+    this.funnel4 = this.funnel4 || '#ee6666';
+    this.funnel5 = this.funnel5 || '#73c0de';
+    this.funnel6 = this.funnel6 || '#3ba272';
+    this.funnel7 = this.funnel7 || '#fc8452';
+    this.funnel8 = this.funnel8 || '#9a60b4';
+    this.funnel9 = this.funnel9 || '#ea7ccc';
+    this.funnel10 = this.funnel10 || '#5470c6';
+    this.funnel11 = this.funnel11 || '#91cc75';
+    this.funnel12 = this.funnel12 || '#fac858';
+    this.funnelTitleTextSize = this.funnelTitleTextSize || '25px';
+    this.funnelTitleTextColor = this.funnelTitleTextColor || this.taskTextDarkColor;
+    this.funnelSectionTextSize = this.funnelSectionTextSize || '17px';
+    this.funnelSectionTextColor = this.funnelSectionTextColor || this.textColor;
+    this.funnelLabelTextSize = this.funnelLabelTextSize || '17px';
+    this.funnelLabelTextColor = this.funnelLabelTextColor || this.taskTextDarkColor;
+    this.funnelStrokeColor = this.funnelStrokeColor || 'black';
+    this.funnelStrokeWidth = this.funnelStrokeWidth || '2px';
+    this.funnelNoteBackground = this.funnelNoteBackground || this.background;
+    this.funnelNoteBorder = this.funnelNoteBorder || this.border1;
+    this.funnelNoteTextColor = this.funnelNoteTextColor || this.textColor;
+    this.funnelConnectorColor = this.funnelConnectorColor || this.lineColor;
+    this.funnelNumberColor = this.funnelNumberColor || '#ffffff';
+
     /* radar */
     this.radar = {
       axisColor: this.radar?.axisColor || this.lineColor,
