@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funnel Diagram Visual Tests - 15 Permutations</title>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      logLevel: 'error'
+    });
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 40px;
+    }
+
+    .info-box {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .info-box h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .info-box li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-box li:last-child {
+      border-bottom: none;
+    }
+
+    .info-box li::before {
+      content: "✓ ";
+      color: #4CAF50;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .diagram-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .diagram-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .diagram-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #667eea;
+    }
+
+    .diagram-number {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 1.5em;
+      font-weight: bold;
+      padding: 15px 25px;
+      border-radius: 50%;
+      margin-right: 20px;
+      min-width: 70px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+    }
+
+    .diagram-title {
+      font-size: 1.4em;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .diagram-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .mermaid {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .feature-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 20px;
+      text-align: center;
+      font-size: 0.9em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .diagram-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .diagram-number {
+        font-size: 1.2em;
+        padding: 10px 15px;
+        min-width: 50px;
+      }
+
+      .diagram-title {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 Funnel Diagram Visual Tests</h1>
+    <div class="subtitle">15 Comprehensive Permutations for Mermaid Funnel Charts</div>
+
+    <div class="info-box">
+      <h2>📋 Features Tested</h2>
+      <div class="features-list">
+        <div class="feature-badge">Basic Funnel Rendering</div>
+        <div class="feature-badge">showData Flag</div>
+        <div class="feature-badge">Custom Colors</div>
+        <div class="feature-badge">Stage Descriptions</div>
+        <div class="feature-badge">Custom Numbering</div>
+        <div class="feature-badge">3-8 Stage Variations</div>
+        <div class="feature-badge">Unicode Characters</div>
+        <div class="feature-badge">Combined Features</div>
+      </div>
+    </div>
+
+    <!-- Diagram 01 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">01</div>
+        <div class="diagram-title">Basic Funnel (Simple 4-stage)</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Sales Pipeline
+    "Leads" : 1000
+    "Qualified" : 500
+    "Proposal" : 200
+    "Closed" : 50
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 02 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">02</div>
+        <div class="diagram-title">Funnel with Data Values Displayed</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title User Acquisition Funnel
+    "Impressions" : 100000
+    "Clicks" : 10000
+    "Registrations" : 1000
+    "Activations" : 500
+    "Retained" : 250
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 03 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">03</div>
+        <div class="diagram-title">E-commerce Conversion Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title E-commerce Conversion
+    "Product Views" : 50000
+    "Add to Cart" : 5000
+    "Checkout Started" : 2000
+    "Payment Completed" : 1500
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 04 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">04</div>
+        <div class="diagram-title">Funnel with Custom Colors</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Marketing Campaign
+    "Awareness" : 10000
+    [color: "#FF6B6B"]
+    "Interest" : 5000
+    [color: "#4ECDC4"]
+    "Consideration" : 2000
+    [color: "#45B7D1"]
+    "Conversion" : 500
+    [color: "#96CEB4"]
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 05 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">05</div>
+        <div class="diagram-title">Funnel with Stage Notes</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Customer Journey
+    "Awareness" : 5000
+    desc "Customer discovers the brand"
+    desc "Through marketing channels"
+    "Interest" : 2000
+    desc "Customer shows interest"
+    desc "Engages with content"
+    "Decision" : 500
+    desc "Customer makes purchase"
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 06 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">06</div>
+        <div class="diagram-title">Funnel with Custom Stage Numbers</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Product Development
+    "Planning" : 100
+    [number: "A1"]
+    "Design" : 80
+    [number: "B2"]
+    "Development" : 60
+    [number: "C3"]
+    "Testing" : 40
+    [number: "D4"]
+    "Launch" : 20
+    [number: "E5"]
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 07 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">07</div>
+        <div class="diagram-title">Complete Funnel with All Features</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title Complete Sales Funnel
+    "Lead Generation" : 1000
+    desc "Marketing campaigns drive traffic"
+    desc "Multiple channels: SEO, Ads, Social"
+    [color: "#FF6B6B"]
+    [number: "01"]
+    "Lead Qualification" : 500
+    desc "Sales team reviews leads"
+    [color: "#4ECDC4"]
+    [number: "02"]
+    "Proposal" : 200
+    desc "Custom solutions presented"
+    [color: "#45B7D1"]
+    [number: "03"]
+    "Closed Won" : 100
+    desc "Contract signed"
+    [color: "#96CEB4"]
+    [number: "04"]
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 08 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">08</div>
+        <div class="diagram-title">Recruitment Hiring Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Hiring Process
+    "Applications" : 500
+    "Phone Screens" : 100
+    "Technical Interviews" : 50
+    "On-site Interviews" : 25
+    "Offers" : 10
+    "Acceptances" : 8
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 09 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">09</div>
+        <div class="diagram-title">Large Multi-Stage Funnel (8 stages)</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title Multi-Stage Process
+    "Stage 1" : 10000
+    "Stage 2" : 8500
+    "Stage 3" : 7000
+    "Stage 4" : 5500
+    "Stage 5" : 4000
+    "Stage 6" : 2800
+    "Stage 7" : 1500
+    "Stage 8" : 800
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 10 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">10</div>
+        <div class="diagram-title">Marketing Campaign Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Marketing ROI
+    "Impressions" : 500000
+    "Clicks" : 25000
+    "Landing Page Views" : 20000
+    "Form Submissions" : 5000
+    "Qualified Leads" : 1200
+    "Sales Opportunities" : 400
+    "Closed Deals" : 100
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 11 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">11</div>
+        <div class="diagram-title">Simple 3-Stage Conversion</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title Simple Conversion
+    "Visitors" : 1000
+    "Sign-ups" : 300
+    "Purchases" : 75
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 12 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">12</div>
+        <div class="diagram-title">SaaS Subscription Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title SaaS Subscription Journey
+    "Free Trial Start" : 5000
+    [color: "#3498db"]
+    "Product Adoption" : 3000
+    [color: "#2ecc71"]
+    "Paid Conversion" : 1000
+    [color: "#f39c12"]
+    "Annual Upgrade" : 300
+    [color: "#e74c3c"]
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 13 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">13</div>
+        <div class="diagram-title">Content Marketing Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Content Engagement
+    "Blog Readers" : 50000
+    desc "Organic and paid traffic"
+    "Newsletter Subscribers" : 10000
+    desc "Email opt-ins"
+    "Download Lead Magnet" : 3000
+    desc "Premium content access"
+    "Product Interest" : 500
+    desc "Demo requests"
+    "Customers" : 150
+    desc "Paying customers"
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 14 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">14</div>
+        <div class="diagram-title">Webinar Registration Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel showData
+    title Webinar Conversion
+    "Landing Page Visits" : 15000
+    [number: "①"]
+    "Registrations" : 3000
+    [number: "②"]
+    "Attended Live" : 1200
+    [number: "③"]
+    "Watched Replay" : 800
+    [number: "④"]
+    "Follow-up Action" : 400
+    [number: "⑤"]
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram 15 -->
+    <div class="diagram-card">
+      <div class="diagram-header">
+        <div class="diagram-number">15</div>
+        <div class="diagram-title">App Onboarding Funnel</div>
+      </div>
+      <div class="diagram-content">
+        <div class="mermaid">
+funnel title Mobile App Onboarding
+    "App Downloads" : 100000
+    [color: "#9b59b6"]
+    [number: "Step 1"]
+    "Account Created" : 75000
+    [color: "#3498db"]
+    [number: "Step 2"]
+    "Profile Completed" : 50000
+    [color: "#1abc9c"]
+    [number: "Step 3"]
+    "First Action" : 30000
+    [color: "#f39c12"]
+    [number: "Step 4"]
+    "Active User (30 days)" : 15000
+    [color: "#27ae60"]
+    [number: "Step 5"]
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top: 50px; text-align: center;">
+      <h2>📸 How to Use This File</h2>
+      <ul style="text-align: left;">
+        <li>Download this HTML file to your local machine</li>
+        <li>Open it in any modern web browser (Chrome, Firefox, Safari, Edge)</li>
+        <li>All 15 funnel diagrams will render automatically</li>
+        <li>Take screenshots of individual diagrams as needed</li>
+        <li>Use browser print function to save as PDF</li>
+      </ul>
+      <p style="margin-top: 20px; color: #666;">
+        Created with Mermaid v11 - Generated on November 15, 2025
+      </p>
+    </div>
+  </div>
+</body>
+</html>
