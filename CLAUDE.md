@@ -72,6 +72,14 @@ The repository uses pnpm workspaces with multiple packages:
 - **`packages/tiny/`** - Minimal build variant
 - **`packages/examples/`** - Example integrations
 
+### Supported Diagram Types
+
+All diagram implementations are in `packages/mermaid/src/diagrams/`:
+
+**Core Diagrams:** architecture, block, c4, class, er, flowchart, gantt, git, mindmap, pie, sequence, state
+**Charts:** funnel, quadrant-chart, radar, sankey, timeline, treemap, xychart
+**Specialized:** info, kanban, packet, requirement, user-journey
+
 ## Core Architecture
 
 ### Diagram Registration System
@@ -118,6 +126,18 @@ Diagrams are registered in `packages/mermaid/src/diagram-api/diagram-orchestrati
 - Visual regression testing powered by Argos
 - Located in `cypress/integration/`
 - Run specific test: `./run cypress run --spec cypress/integration/rendering/test.spec.ts`
+
+### E2E Tests (Playwright)
+
+- Modern alternative to Cypress for E2E testing
+- Commands:
+  ```bash
+  pnpm playwright           # Run all Playwright tests
+  pnpm playwright:ui        # Interactive UI mode
+  pnpm playwright:headed    # Run with browser visible
+  pnpm playwright:debug     # Debug mode
+  pnpm e2e:playwright       # Run with dev server
+  ```
 
 ## Branch Naming Convention
 
@@ -174,6 +194,66 @@ If modifying grammar files in `packages/parser/`:
 ```bash
 pnpm --filter @mermaid-js/parser langium:generate
 ```
+
+## Code Standards
+
+### TypeScript & Formatting
+
+- **Target:** ES2018, **Module:** NodeNext
+- **Strict mode:** Enabled
+- **Prettier:** 100 char width, single quotes, 2 spaces (see `.prettierrc.json`)
+- **ESLint:** TypeScript strict + Unicorn + JSDoc plugins (see `eslint.config.js`)
+
+### File Naming & Imports
+
+- TypeScript files: `camelCase.ts` (e.g., `flowDb.ts`)
+- Test files: `*.spec.ts`
+- Directories: `kebab-case` (e.g., `sequence-diagram/`)
+- **Important:** Use `.js` extension in imports (TypeScript/ESM convention)
+  ```typescript
+  import { foo } from './bar.js';  // Even though file is bar.ts
+  ```
+
+### Security Considerations
+
+- **Always sanitize user input** - Mermaid text becomes HTML/SVG
+- Use `DOMPurify` for HTML sanitization
+- Use `@braintree/sanitize-url` for URL validation
+- Prefer DOM APIs over `innerHTML`
+- Be cautious with eval-like operations
+
+## Tips for AI Assistants
+
+### Common Gotchas
+
+1. **Never edit `/docs` directly** - it's auto-generated from `packages/mermaid/src/docs/`
+2. **Never edit `dist/` files** - they're build outputs
+3. **Import extensions:** Always use `.js` even for `.ts` files
+4. **Monorepo commands:** Use `pnpm --filter <package>` for package-specific commands
+5. **Testing DOM:** Use `jsdomIt` for unit tests, Cypress/Playwright for E2E
+
+### Diagram Implementation Pattern
+
+Each diagram follows a consistent structure:
+```
+diagrams/<name>/
+├── <name>Db.ts          # State management
+├── <name>Db.spec.ts     # Tests
+├── <name>Renderer.ts    # SVG rendering
+├── <name>Detector.ts    # Type detection
+├── <name>Diagram.ts     # Registration
+├── parser/              # Grammar (optional)
+├── styles.ts            # Diagram styles
+└── types.ts             # TypeScript types
+```
+
+### Before Submitting PRs
+
+- [ ] `pnpm test` passes (lint + unit tests)
+- [ ] `pnpm build` succeeds
+- [ ] Update docs in `packages/mermaid/src/docs/` if needed
+- [ ] Add `(v<MERMAID_RELEASE_VERSION>+)` for new features
+- [ ] Visual tests added for rendering changes
 
 ## Important Notes
 
