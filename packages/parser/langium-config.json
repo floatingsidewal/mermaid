@@ -22,6 +22,11 @@
       "fileExtensions": [".mmd", ".mermaid"]
     },
     {
+      "id": "funnelFlow",
+      "grammar": "src/language/funnelFlow/funnelFlow.langium",
+      "fileExtensions": [".mmd", ".mermaid"]
+    },
+    {
       "id": "architecture",
       "grammar": "src/language/architecture/architecture.langium",
       "fileExtensions": [".mmd", ".mermaid"]

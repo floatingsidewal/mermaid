@@ -7,6 +7,7 @@ import gantt from '../diagrams/gantt/ganttDetector.js';
 import { info } from '../diagrams/info/infoDetector.js';
 import { pie } from '../diagrams/pie/pieDetector.js';
 import { funnel } from '../diagrams/funnel/funnelDetector.js';
+import { funnelFlow } from '../diagrams/funnelFlow/funnelFlowDetector.js';
 import quadrantChart from '../diagrams/quadrant-chart/quadrantDetector.js';
 import xychart from '../diagrams/xychart/xychartDetector.js';
 import requirement from '../diagrams/requirement/requirementDetector.js';
@@ -87,6 +88,7 @@ export const addDiagrams = () => {
     gantt,
     info,
     pie,
+    funnelFlow,
     funnel,
     requirement,
     sequence,

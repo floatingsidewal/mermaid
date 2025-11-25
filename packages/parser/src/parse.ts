@@ -1,8 +1,26 @@
 import type { LangiumParser, ParseResult } from 'langium';
 
-import type { Info, Packet, Pie, Architecture, GitGraph, Radar, Treemap, Funnel } from './index.js';
+import type {
+  Info,
+  Packet,
+  Pie,
+  Architecture,
+  GitGraph,
+  Radar,
+  Treemap,
+  Funnel,
+  FunnelFlow,
+} from './index.js';
 
-export type DiagramAST = Info | Packet | Pie | Architecture | GitGraph | Radar | Funnel;
+export type DiagramAST =
+  | Info
+  | Packet
+  | Pie
+  | Architecture
+  | GitGraph
+  | Radar
+  | Funnel
+  | FunnelFlow;
 
 const parsers: Record<string, LangiumParser> = {};
 const initializers = {
@@ -46,6 +64,11 @@ const initializers = {
     const parser = createFunnelServices().Funnel.parser.LangiumParser;
     parsers.funnel = parser;
   },
+  funnelFlow: async () => {
+    const { createFunnelFlowServices } = await import('./language/funnelFlow/index.js');
+    const parser = createFunnelFlowServices().FunnelFlow.parser.LangiumParser;
+    parsers.funnelFlow = parser;
+  },
 } as const;
 
 export async function parse(diagramType: 'info', text: string): Promise<Info>;
@@ -56,6 +79,7 @@ export async function parse(diagramType: 'gitGraph', text: string): Promise<GitG
 export async function parse(diagramType: 'radar', text: string): Promise<Radar>;
 export async function parse(diagramType: 'treemap', text: string): Promise<Treemap>;
 export async function parse(diagramType: 'funnel', text: string): Promise<Funnel>;
+export async function parse(diagramType: 'funnelFlow', text: string): Promise<FunnelFlow>;
 
 export async function parse<T extends DiagramAST>(
   diagramType: keyof typeof initializers,

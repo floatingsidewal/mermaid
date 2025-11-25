@@ -7,6 +7,7 @@ export {
   PieSection,
   Funnel,
   FunnelSection,
+  FunnelFlow,
   Architecture,
   GitGraph,
   Radar,
@@ -22,6 +23,7 @@ export {
   isPieSection,
   isFunnel,
   isFunnelSection,
+  isFunnelFlow,
   isArchitecture,
   isGitGraph,
   isTreemap,
@@ -36,6 +38,7 @@ export {
   PacketGeneratedModule,
   PieGeneratedModule,
   FunnelGeneratedModule,
+  FunnelFlowGeneratedModule,
   ArchitectureGeneratedModule,
   GitGraphGeneratedModule,
   RadarGeneratedModule,
@@ -48,6 +51,7 @@ export * from './info/index.js';
 export * from './packet/index.js';
 export * from './pie/index.js';
 export * from './funnel/index.js';
+export * from './funnelFlow/index.js';
 export * from './architecture/index.js';
 export * from './radar/index.js';
 export * from './treemap/index.js';
