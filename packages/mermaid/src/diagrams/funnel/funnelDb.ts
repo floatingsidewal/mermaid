@@ -25,6 +25,7 @@ let sections: Sections = new Map();
 let showData = DEFAULT_FUNNEL_DB.showData;
 let autoNumbering = true;
 let stageName = 'Stage'; // Default stage name
+let trueScale = false; // When true, width reflects actual data values
 const config: Required<FunnelDiagramConfig> = structuredClone(DEFAULT_FUNNEL_CONFIG);
 
 const getConfig = (): Required<FunnelDiagramConfig> => structuredClone(config);
@@ -34,6 +35,7 @@ const clear = (): void => {
   showData = DEFAULT_FUNNEL_DB.showData;
   autoNumbering = true;
   stageName = 'Stage';
+  trueScale = false;
   commonClear();
 };
 
@@ -74,6 +76,12 @@ const setStageName = (name: string): void => {
 
 const getStageName = (): string => stageName;
 
+const setTrueScale = (toggle: boolean): void => {
+  trueScale = toggle;
+};
+
+const getTrueScale = (): boolean => trueScale;
+
 export const db: FunnelDB = {
   getConfig,
 
@@ -93,4 +101,6 @@ export const db: FunnelDB = {
   getAutoNumbering,
   setStageName,
   getStageName,
+  setTrueScale,
+  getTrueScale,
 };

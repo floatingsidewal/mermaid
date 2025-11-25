@@ -3,7 +3,7 @@ import "../common/common";
 
 entry Funnel:
   NEWLINE*
-  "funnel" showData?="showData"?
+  "funnel" showData?="showData"? trueScale?="trueScale"?
   (
     TitleAndAccessibilities
     | stageName=StageName

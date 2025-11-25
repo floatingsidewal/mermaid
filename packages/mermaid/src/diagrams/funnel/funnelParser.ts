@@ -9,6 +9,7 @@ import { db } from './funnelDb.js';
 const populateDb = (ast: Funnel, db: FunnelDB) => {
   populateCommonDb(ast, db);
   db.setShowData(ast.showData);
+  db.setTrueScale(ast.trueScale);
 
   // Set stage name if provided
   if (ast.stageName) {

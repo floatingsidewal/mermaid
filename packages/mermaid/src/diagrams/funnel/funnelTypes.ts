@@ -29,6 +29,9 @@ export interface FunnelStyleOptions {
   funnelLabelTextColor: string;
   funnelStrokeColor: string;
   funnelStrokeWidth: string;
+  funnelNumberColor: string;
+  funnelValueTextColor: string;
+  funnelNoteTextColor: string;
 }
 
 export type Sections = Map<string, FunnelSectionData>;
@@ -70,4 +73,6 @@ export interface FunnelDB extends DiagramDB {
   getAutoNumbering: () => boolean;
   setStageName: (name: string) => void;
   getStageName: () => string;
+  setTrueScale: (toggle: boolean) => void;
+  getTrueScale: () => boolean;
 }

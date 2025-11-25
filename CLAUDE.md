@@ -173,7 +173,39 @@ If modifying grammar files in `packages/parser/`:
 
 ```bash
 pnpm --filter @mermaid-js/parser langium:generate
+pnpm build:esbuild  # IMPORTANT: Must rebuild after grammar changes!
 ```
+
+**Critical**: After regenerating the Langium grammar, you MUST run `pnpm build:esbuild` to rebuild the parser package. Without this step, tests and the dev server will use a stale version of the parser that doesn't include your grammar changes.
+
+### Adding Keywords to Langium Grammars
+
+When adding new keywords (like `showData`, `trueScale`) to a diagram's grammar:
+
+1. **Edit the `.langium` file** - Add the keyword to the grammar definition:
+
+   ```langium
+   "funnel" showData?="showData"? trueScale?="trueScale"?
+   ```
+
+2. **Update the `tokenBuilder.ts`** - Add the keyword to the token builder's keyword list:
+
+   ```typescript
+   super(['funnel', 'showData', 'trueScale']);
+   ```
+
+   This ensures the keyword pattern is properly recognized by the lexer.
+
+3. **Regenerate and rebuild**:
+
+   ```bash
+   pnpm --filter @mermaid-js/parser langium:generate
+   pnpm build:esbuild
+   ```
+
+4. **Restart dev server** (or it will use stale parser)
+
+**Note**: Keywords should use camelCase (e.g., `showData`, `trueScale`) to match existing conventions.
 
 ## Important Notes
 

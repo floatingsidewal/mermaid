@@ -45,6 +45,33 @@ describe('funnel', () => {
       expect(sections.get('Stage 2')?.value).toBe(500);
     });
 
+    it('should handle funnel with trueScale', async () => {
+      await parser.parse(`funnel trueScale
+      "Stage 1" : 1000
+      "Stage 2" : 500
+      `);
+
+      expect(db.getTrueScale()).toBeTruthy();
+
+      const sections = db.getSections();
+      expect(sections.get('Stage 1')?.value).toBe(1000);
+      expect(sections.get('Stage 2')?.value).toBe(500);
+    });
+
+    it('should handle funnel with showData and trueScale', async () => {
+      await parser.parse(`funnel showData trueScale
+      "Stage 1" : 1000
+      "Stage 2" : 500
+      `);
+
+      expect(db.getShowData()).toBeTruthy();
+      expect(db.getTrueScale()).toBeTruthy();
+
+      const sections = db.getSections();
+      expect(sections.get('Stage 1')?.value).toBe(1000);
+      expect(sections.get('Stage 2')?.value).toBe(500);
+    });
+
     it('should handle funnel with comments', async () => {
       await parser.parse(`funnel
       %% This is a comment

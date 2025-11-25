@@ -12,12 +12,44 @@ const getStyles: DiagramStylesProvider = (options: FunnelStyleOptions) =>
     font-size: ${options.funnelTitleTextSize};
     fill: ${options.funnelTitleTextColor};
     font-family: ${options.fontFamily};
+    font-weight: 600;
+  }
+  .funnelStageNumber {
+    fill: ${options.funnelNumberColor};
+    font-family: ${options.fontFamily};
+    font-weight: 700;
+    font-size: 0.95em;
+    text-anchor: middle;
+  }
+  .funnelStageBadge {
+    pointer-events: none;
   }
   .funnelLabel {
     font-family: ${options.fontFamily};
-    fill: ${options.funnelSectionTextColor};
+    fill: #ffffff;
     font-size: ${options.funnelSectionTextSize};
+    font-weight: 500;
     text-anchor: middle;
+  }
+  .funnelValue {
+    font-family: ${options.fontFamily};
+    fill: ${options.funnelValueTextColor};
+    font-size: 0.85em;
+    text-anchor: middle;
+  }
+  .funnelNoteConnector {
+    stroke-linecap: round;
+  }
+  .funnelNoteHeader {
+    font-family: ${options.fontFamily};
+    font-weight: 600;
+    font-size: 0.9em;
+    fill: ${options.funnelNoteTextColor};
+  }
+  .funnelNoteText {
+    font-family: ${options.fontFamily};
+    font-size: 0.85em;
+    fill: ${options.funnelNoteTextColor};
   }
   .funnelLegend text {
     fill: ${options.funnelLabelTextColor};

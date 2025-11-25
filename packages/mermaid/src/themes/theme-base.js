@@ -251,13 +251,14 @@ class Theme {
     this.funnelSectionTextColor = this.funnelSectionTextColor || this.textColor;
     this.funnelLabelTextSize = this.funnelLabelTextSize || '17px';
     this.funnelLabelTextColor = this.funnelLabelTextColor || this.taskTextDarkColor;
-    this.funnelStrokeColor = this.funnelStrokeColor || 'black';
-    this.funnelStrokeWidth = this.funnelStrokeWidth || '2px';
-    this.funnelNoteBackground = this.funnelNoteBackground || this.background;
-    this.funnelNoteBorder = this.funnelNoteBorder || this.border1;
+    this.funnelStrokeColor = this.funnelStrokeColor || 'rgba(0,0,0,0.1)';
+    this.funnelStrokeWidth = this.funnelStrokeWidth || '1px';
+    this.funnelNoteBackground = this.funnelNoteBackground || '#ffffff';
+    this.funnelNoteBorder = this.funnelNoteBorder || '#e0e0e0';
     this.funnelNoteTextColor = this.funnelNoteTextColor || this.textColor;
     this.funnelConnectorColor = this.funnelConnectorColor || this.lineColor;
     this.funnelNumberColor = this.funnelNumberColor || '#ffffff';
+    this.funnelValueTextColor = this.funnelValueTextColor || 'rgba(255,255,255,0.9)';
 
     /* radar */
     this.radar = {

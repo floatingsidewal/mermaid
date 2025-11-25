@@ -6,6 +6,7 @@ import { selectSvgElement } from '../../rendering-util/selectSvgElement.js';
 import { configureSvgSize } from '../../setupGraphViewbox.js';
 import { cleanAndMerge } from '../../utils.js';
 import type { FunnelSection, FunnelDB, Sections } from './funnelTypes.js';
+import { darken, lighten } from 'khroma';
 
 /**
  * Draws a Funnel Chart with the given data.
@@ -25,13 +26,17 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
   );
 
   const MARGIN = 40;
-  const LEGEND_RECT_SIZE = 18;
+  const LEGEND_RECT_SIZE = 16;
   const LEGEND_SPACING = 4;
-  const STAGE_SPACING = 10;
+  const STAGE_OVERLAP = 5; // Stages overlap for depth effect
   const NOTE_HORIZONTAL_OFFSET = 250;
   const NOTE_MIN_WIDTH = 150;
   const NOTE_MAX_WIDTH = 300;
   const NOTE_PADDING = 12;
+  const CORNER_RADIUS = 8;
+  const LEGEND_ITEMS_PER_ROW = 2;
+  const LEGEND_ITEM_WIDTH = 200;
+  const LEGEND_ROW_HEIGHT = 28;
   const height = 600;
   const funnelWidth = 500;
 
@@ -41,11 +46,100 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
     return text.length * 7 * (fontSize / 0.85);
   };
 
+  // Helper function to build rounded trapezoid SVG path
+  const buildRoundedTrapezoid = (
+    topLeft: number,
+    topRight: number,
+    bottomLeft: number,
+    bottomRight: number,
+    y: number,
+    stageHeight: number,
+    radius: number
+  ): string => {
+    const r = Math.min(radius, stageHeight / 4, Math.abs(topRight - topLeft) / 4);
+    return `
+      M ${topLeft + r},${y}
+      L ${topRight - r},${y}
+      Q ${topRight},${y} ${topRight},${y + r}
+      L ${bottomRight},${y + stageHeight - r}
+      Q ${bottomRight},${y + stageHeight} ${bottomRight - r},${y + stageHeight}
+      L ${bottomLeft + r},${y + stageHeight}
+      Q ${bottomLeft},${y + stageHeight} ${bottomLeft},${y + stageHeight - r}
+      L ${topLeft},${y + r}
+      Q ${topLeft},${y} ${topLeft + r},${y}
+      Z
+    `
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
+  // Helper function to draw curved connector
+  const drawCurvedConnector = (
+    noteGroup: SVGGroup,
+    startX: number,
+    startY: number,
+    endX: number,
+    endY: number,
+    side: 'left' | 'right',
+    color: string
+  ): void => {
+    const controlOffset = Math.abs(endX - startX) * 0.4;
+    const path =
+      side === 'left'
+        ? `M ${startX},${startY} Q ${startX - controlOffset},${startY} ${endX},${endY}`
+        : `M ${startX},${startY} Q ${startX + controlOffset},${startY} ${endX},${endY}`;
+
+    noteGroup
+      .append('path')
+      .attr('d', path)
+      .attr('fill', 'none')
+      .attr('stroke', color)
+      .attr('stroke-width', 1.5)
+      .attr('stroke-dasharray', '6,4')
+      .attr('class', 'funnelNoteConnector');
+  };
+
   const svg: SVG = selectSvgElement(id);
+  const { themeVariables } = globalConfig;
+
+  // Create SVG defs for gradients and filters
+  const defs = svg.append('defs');
+
+  // Create drop shadow filter for depth effect
+  const shadowFilter = defs
+    .append('filter')
+    .attr('id', 'funnelDropShadow')
+    .attr('x', '-20%')
+    .attr('y', '-20%')
+    .attr('width', '150%')
+    .attr('height', '150%');
+
+  shadowFilter
+    .append('feDropShadow')
+    .attr('dx', 0)
+    .attr('dy', 3)
+    .attr('stdDeviation', 4)
+    .attr('flood-color', 'rgba(0,0,0,0.25)');
+
+  // Create subtle shadow for note boxes
+  const noteShadowFilter = defs
+    .append('filter')
+    .attr('id', 'funnelNoteShadow')
+    .attr('x', '-10%')
+    .attr('y', '-10%')
+    .attr('width', '130%')
+    .attr('height', '130%');
+
+  noteShadowFilter
+    .append('feDropShadow')
+    .attr('dx', 0)
+    .attr('dy', 2)
+    .attr('stdDeviation', 3)
+    .attr('flood-color', 'rgba(0,0,0,0.12)');
+
   const group: SVGGroup = svg.append('g');
   group.attr('transform', `translate(${MARGIN}, ${MARGIN})`);
 
-  const { themeVariables } = globalConfig;
   const sections: Sections = db.getSections();
   const sectionsArray: FunnelSection[] = [...sections.entries()].map(([label, data]) => ({
     label,
@@ -58,11 +152,6 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
   if (sectionsArray.length === 0) {
     return;
   }
-
-  // Calculate dimensions
-  const maxValue = Math.max(...sectionsArray.map((s) => s.value));
-  const stageHeight =
-    (height - MARGIN * 2 - STAGE_SPACING * (sectionsArray.length - 1)) / sectionsArray.length;
 
   // Color scale
   const myGeneratedColors = [
@@ -80,55 +169,188 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
     themeVariables.funnel12,
   ];
 
-  // Draw funnel stages with colors, numbers, and notes
+  // Create gradients for each stage (lighter top, darker bottom)
+  sectionsArray.forEach((section, index) => {
+    const baseColor = section.color ?? myGeneratedColors[index % myGeneratedColors.length];
+    const gradient = defs
+      .append('linearGradient')
+      .attr('id', `funnelGradient-${index}`)
+      .attr('x1', '0%')
+      .attr('y1', '0%')
+      .attr('x2', '0%')
+      .attr('y2', '100%');
+
+    gradient.append('stop').attr('offset', '0%').attr('stop-color', lighten(baseColor, 12));
+    gradient.append('stop').attr('offset', '100%').attr('stop-color', darken(baseColor, 12));
+  });
+
+  // Calculate dimensions
+  const maxValue = Math.max(...sectionsArray.map((s) => s.value));
+  const minValue = Math.min(...sectionsArray.map((s) => s.value));
+  // Account for overlapping stages instead of spacing
+  const totalOverlap = STAGE_OVERLAP * (sectionsArray.length - 1);
+  const stageHeight = (height - MARGIN * 2 + totalOverlap) / sectionsArray.length;
+
+  // Calculate minimum width needed for the narrowest stage (based on longest label)
+  const MIN_STAGE_PADDING = 40; // Padding on each side of text
+  const maxLabelWidth = Math.max(
+    ...sectionsArray.map((section) => estimateTextWidth(section.label, 1.0))
+  );
+  const minStageWidth = Math.max(maxLabelWidth + MIN_STAGE_PADDING * 2, 120);
+
+  // Check if trueScale mode is enabled
+  const useTrueScale = db.getTrueScale();
+
+  // Default: Fixed percentage taper per stage (visual consistency)
+  // TrueScale: Width based on actual data values
+  const TAPER_PERCENT = 0.12; // Each stage tapers by 12% of the previous
+
+  const calculateWidth = (value: number, stageIndex: number): number => {
+    if (useTrueScale) {
+      // TrueScale mode: width reflects actual data values
+      if (maxValue === minValue) {
+        return funnelWidth;
+      }
+      const valueRatio = (value - minValue) / (maxValue - minValue);
+      return minStageWidth + valueRatio * (funnelWidth - minStageWidth);
+    } else {
+      // Default mode: consistent visual taper per stage
+      const taperAmount = funnelWidth * TAPER_PERCENT * stageIndex;
+      const width = funnelWidth - taperAmount;
+      // Ensure we don't go below minimum readable width
+      return Math.max(width, minStageWidth);
+    }
+  };
+
+  // Pre-calculate all stage positions for proper rendering
+  interface StagePosition {
+    y: number;
+    topWidth: number;
+    bottomWidth: number;
+    topLeft: number;
+    topRight: number;
+    bottomLeft: number;
+    bottomRight: number;
+  }
+
+  const stagePositions: StagePosition[] = [];
   let currentY = 0;
   let maxNoteWidth = 0;
 
   sectionsArray.forEach((section, index) => {
-    const topWidth = (section.value / maxValue) * funnelWidth;
-    const nextValue =
-      index < sectionsArray.length - 1 ? sectionsArray[index + 1].value : section.value;
-    const bottomWidth = (nextValue / maxValue) * funnelWidth;
+    const topWidth = calculateWidth(section.value, index);
 
-    // Calculate trapezoid points (centered)
+    const nextIndex = index + 1;
+    const nextValue =
+      index < sectionsArray.length - 1 ? sectionsArray[nextIndex].value : section.value;
+    const bottomWidth = calculateWidth(nextValue, nextIndex);
+
     const topLeft = (funnelWidth - topWidth) / 2;
     const topRight = topLeft + topWidth;
     const bottomLeft = (funnelWidth - bottomWidth) / 2;
     const bottomRight = bottomLeft + bottomWidth;
 
-    const points = `${topLeft},${currentY} ${topRight},${currentY} ${bottomRight},${currentY + stageHeight} ${bottomLeft},${currentY + stageHeight}`;
+    stagePositions.push({
+      y: currentY,
+      topWidth,
+      bottomWidth,
+      topLeft,
+      topRight,
+      bottomLeft,
+      bottomRight,
+    });
 
-    // Use custom color if provided, otherwise use theme color
-    const stageColor = section.color ?? myGeneratedColors[index % myGeneratedColors.length];
+    currentY += stageHeight - STAGE_OVERLAP;
+  });
 
-    // Draw the stage
+  // Draw stages from BOTTOM to TOP for overlap effect (upper stages appear on top)
+  [...sectionsArray].reverse().forEach((_, reverseIndex) => {
+    const index = sectionsArray.length - 1 - reverseIndex;
+    const pos = stagePositions[index];
+
+    // Draw the stage using rounded path with gradient fill
     group
-      .append('polygon')
-      .attr('points', points)
-      .attr('fill', stageColor)
+      .append('path')
+      .attr(
+        'd',
+        buildRoundedTrapezoid(
+          pos.topLeft,
+          pos.topRight,
+          pos.bottomLeft,
+          pos.bottomRight,
+          pos.y,
+          stageHeight,
+          CORNER_RADIUS
+        )
+      )
+      .attr('fill', `url(#funnelGradient-${index})`)
+      .attr('filter', 'url(#funnelDropShadow)')
       .attr('class', 'funnelStage');
+  });
 
-    // Add stage number (auto-generated or custom)
+  // Draw labels, numbers, values, and notes in original order (on top of stages)
+  sectionsArray.forEach((section, index) => {
+    const pos = stagePositions[index];
+
+    // Add stage number with badge background
     const stageNumber =
       section.customNumber ?? (db.getAutoNumbering() ? String(index + 1).padStart(2, '0') : '');
     if (stageNumber) {
+      // Badge background
+      group
+        .append('rect')
+        .attr('x', funnelWidth / 2 - 18)
+        .attr('y', pos.y + stageHeight * 0.2 - 10)
+        .attr('width', 36)
+        .attr('height', 20)
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('fill', 'rgba(255,255,255,0.2)')
+        .attr('class', 'funnelStageBadge');
+
       group
         .append('text')
         .text(stageNumber)
         .attr('x', funnelWidth / 2)
-        .attr('y', currentY + stageHeight / 4)
+        .attr('y', pos.y + stageHeight * 0.2)
         .attr('dy', '0.35em')
-        .attr('class', 'funnelStageNumber')
-        .style('fill', 'white')
-        .style('font-weight', '600')
-        .style('font-size', '1.2em');
+        .attr('class', 'funnelStageNumber');
     }
 
-    // Add label
-    const labelY = currentY + stageHeight / 2;
+    // Add label with background pill if text overflows stage width
+    const labelY = pos.y + stageHeight * 0.5;
+    const labelText = section.label;
+    const labelWidth = estimateTextWidth(labelText, 1.0);
+
+    // Calculate the stage width at the label's Y position (interpolate between top and bottom)
+    const labelRatio = 0.5; // Label is at 50% of stage height
+    const stageWidthAtLabel = pos.topWidth + (pos.bottomWidth - pos.topWidth) * labelRatio;
+
+    // Check if label overflows and needs a background
+    const labelOverflows = labelWidth > stageWidthAtLabel - 20;
+
+    if (labelOverflows) {
+      // Add background pill for label
+      const pillPadding = 12;
+      const pillWidth = labelWidth + pillPadding * 2;
+      const pillHeight = db.getShowData() ? 48 : 28;
+      const pillY = labelY - (db.getShowData() ? 8 : 14);
+
+      group
+        .append('rect')
+        .attr('x', funnelWidth / 2 - pillWidth / 2)
+        .attr('y', pillY)
+        .attr('width', pillWidth)
+        .attr('height', pillHeight)
+        .attr('rx', 6)
+        .attr('ry', 6)
+        .attr('fill', 'rgba(0, 0, 0, 0.35)')
+        .attr('class', 'funnelLabelBackground');
+    }
+
     group
       .append('text')
-      .text(section.label)
+      .text(labelText)
       .attr('x', funnelWidth / 2)
       .attr('y', labelY)
       .attr('dy', '0.35em')
@@ -140,17 +362,16 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
         .append('text')
         .text(`${section.value}`)
         .attr('x', funnelWidth / 2)
-        .attr('y', labelY + 20)
+        .attr('y', labelY + 22)
         .attr('dy', '0.35em')
-        .attr('class', 'funnelLabel')
-        .style('font-size', '0.9em');
+        .attr('class', 'funnelValue');
     }
 
     // Add note if description exists
     if (section.description && section.description.length > 0) {
-      const notePosition = index % 2 === 0 ? 'left' : 'right';
+      const notePosition: 'left' | 'right' = index % 2 === 0 ? 'left' : 'right';
 
-      // Calculate note width based on content first
+      // Calculate note width based on content
       const headerText = `${db.getStageName()} ${index + 1}`;
       const headerWidth = estimateTextWidth(headerText, 0.95);
       const maxLineWidth = Math.max(
@@ -162,11 +383,9 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
         NOTE_MAX_WIDTH
       );
 
-      const noteY = currentY + stageHeight / 2;
+      const noteY = pos.y + stageHeight / 2;
 
-      // Position note boxes:
-      // - Left: right edge at fixed offset, extends leftward
-      // - Right: left edge at fixed offset, extends rightward
+      // Position note boxes
       const noteBgX =
         notePosition === 'left'
           ? -NOTE_HORIZONTAL_OFFSET - noteWidth
@@ -175,23 +394,19 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
       // Create note group
       const noteGroup = group.append('g').attr('class', 'funnelNote');
 
-      // Add connector line
-      const connectorStartX = notePosition === 'left' ? topLeft : topRight;
-      const connectorEndX =
-        notePosition === 'left'
-          ? noteBgX + noteWidth // Right edge of left box
-          : noteBgX; // Left edge of right box
+      // Add curved connector line
+      const connectorStartX = notePosition === 'left' ? pos.topLeft : pos.topRight;
+      const connectorEndX = notePosition === 'left' ? noteBgX + noteWidth : noteBgX;
 
-      noteGroup
-        .append('line')
-        .attr('x1', connectorStartX)
-        .attr('y1', noteY)
-        .attr('x2', connectorEndX)
-        .attr('y2', noteY)
-        .attr('stroke', themeVariables.lineColor ?? '#999')
-        .attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '4,4')
-        .attr('class', 'funnelNoteConnector');
+      drawCurvedConnector(
+        noteGroup,
+        connectorStartX,
+        noteY,
+        connectorEndX,
+        noteY,
+        notePosition,
+        themeVariables.lineColor ?? '#999'
+      );
 
       // Calculate note background dimensions
       const noteLineHeight = 18;
@@ -199,17 +414,18 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
       const noteHeight =
         noteHeaderHeight + section.description.length * noteLineHeight + NOTE_PADDING * 2 + 20;
 
-      // Add note background
+      // Add note background with subtle shadow
       noteGroup
         .append('rect')
         .attr('x', noteBgX)
         .attr('y', noteY - noteHeight / 2)
         .attr('width', noteWidth)
         .attr('height', noteHeight)
-        .attr('rx', 6)
+        .attr('rx', 8)
         .attr('fill', themeVariables.noteBkg ?? '#f9f9f9')
-        .attr('stroke', themeVariables.noteBorderColor ?? '#ddd')
+        .attr('stroke', themeVariables.noteBorderColor ?? '#e0e0e0')
         .attr('stroke-width', 1)
+        .attr('filter', 'url(#funnelNoteShadow)')
         .attr('class', 'funnelNoteBackground');
 
       // Add note header (e.g., "Stage N", "Phase N", "Step N")
@@ -247,8 +463,6 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
 
       maxNoteWidth = Math.max(maxNoteWidth, noteWidth);
     }
-
-    currentY += stageHeight + STAGE_SPACING;
   });
 
   // Add title
@@ -261,7 +475,15 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
       .attr('class', 'funnelTitleText');
   }
 
-  // Add legend
+  // Calculate the actual funnel height used (accounting for overlaps)
+  const actualFunnelHeight =
+    sectionsArray.length * stageHeight - (sectionsArray.length - 1) * STAGE_OVERLAP;
+
+  // Add legend below the funnel with horizontal layout
+  const legendStartY = actualFunnelHeight + 50;
+  const numLegendRows = Math.ceil(sectionsArray.length / LEGEND_ITEMS_PER_ROW);
+  const totalLegendHeight = numLegendRows * LEGEND_ROW_HEIGHT;
+
   const legend = group
     .selectAll('.funnelLegend')
     .data(sectionsArray)
@@ -269,23 +491,30 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
     .append('g')
     .attr('class', 'funnelLegend')
     .attr('transform', (_datum, index: number): string => {
-      const legendHeight = LEGEND_RECT_SIZE + LEGEND_SPACING;
-      const offset = (legendHeight * sectionsArray.length) / 2;
-      const horizontal = funnelWidth + 20;
-      const vertical = index * legendHeight - offset + height / 2;
-      return `translate(${horizontal}, ${vertical})`;
+      const row = Math.floor(index / LEGEND_ITEMS_PER_ROW);
+      const col = index % LEGEND_ITEMS_PER_ROW;
+      // Center the legend horizontally relative to funnel
+      const itemsInCurrentRow = Math.min(
+        sectionsArray.length - row * LEGEND_ITEMS_PER_ROW,
+        LEGEND_ITEMS_PER_ROW
+      );
+      const rowWidth = itemsInCurrentRow * LEGEND_ITEM_WIDTH;
+      const startX = (funnelWidth - rowWidth) / 2;
+      return `translate(${startX + col * LEGEND_ITEM_WIDTH}, ${legendStartY + row * LEGEND_ROW_HEIGHT})`;
     });
 
+  // Legend swatches with rounded corners and gradient fill
   legend
     .append('rect')
     .attr('width', LEGEND_RECT_SIZE)
     .attr('height', LEGEND_RECT_SIZE)
-    .style('fill', (_d, i) => myGeneratedColors[i % myGeneratedColors.length])
-    .style('stroke', (_d, i) => myGeneratedColors[i % myGeneratedColors.length]);
+    .attr('rx', 4)
+    .attr('ry', 4)
+    .style('fill', (_d, i) => `url(#funnelGradient-${i})`);
 
   legend
     .append('text')
-    .attr('x', LEGEND_RECT_SIZE + LEGEND_SPACING)
+    .attr('x', LEGEND_RECT_SIZE + LEGEND_SPACING + 4)
     .attr('y', LEGEND_RECT_SIZE - LEGEND_SPACING)
     .text((d) => {
       if (db.getShowData()) {
@@ -294,25 +523,12 @@ export const draw: DrawDefinition = (text, id, _version, diagObj) => {
       return d.label;
     });
 
-  const longestTextWidth = Math.max(
-    ...legend
-      .selectAll('text')
-      .nodes()
-      .map((node) => (node as Element)?.getBoundingClientRect().width ?? 0)
-  );
-
-  // Calculate total width including notes on both sides
+  // Calculate total dimensions
   const noteSpace = maxNoteWidth > 0 ? NOTE_HORIZONTAL_OFFSET + maxNoteWidth : 0;
-  const totalWidth =
-    noteSpace + // left notes
-    funnelWidth +
-    noteSpace + // right notes
-    MARGIN * 2 +
-    LEGEND_RECT_SIZE +
-    LEGEND_SPACING +
-    longestTextWidth +
-    20; // legend
-  const totalHeight = height + MARGIN * 2;
+  const legendWidth = Math.min(sectionsArray.length, LEGEND_ITEMS_PER_ROW) * LEGEND_ITEM_WIDTH;
+  const contentWidth = Math.max(funnelWidth, legendWidth);
+  const totalWidth = noteSpace + contentWidth + noteSpace + MARGIN * 2;
+  const totalHeight = actualFunnelHeight + MARGIN * 2 + 60 + totalLegendHeight;
 
   // Adjust group transform to account for left notes
   if (maxNoteWidth > 0) {
