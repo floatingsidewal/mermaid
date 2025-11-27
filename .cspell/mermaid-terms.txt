@@ -34,6 +34,7 @@ rect
 rects
 sandboxed
 siebling
+smartshape
 statediagram
 substate
 unfixable

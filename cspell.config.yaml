@@ -39,6 +39,7 @@ overrides:
       - fonts
       - html
       - lorem-ipsum
+      - mermaid-terms
   - filename: '**/package.json'
     ignoreRegExpList:
       - json-property

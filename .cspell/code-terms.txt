@@ -102,6 +102,7 @@ sankey
 sequencenumber
 shrc
 signaltype
+smartshape
 someclass
 SPACELINE
 SPACELIST

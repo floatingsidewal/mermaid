@@ -1,3 +1,4 @@
+// cspell:ignore smartshape
 export {
   Info,
   MermaidAstType,
@@ -9,6 +10,8 @@ export {
   GitGraph,
   Radar,
   Treemap,
+  SmartShape,
+  SmartShapeRow,
   Branch,
   Commit,
   Merge,
@@ -21,6 +24,7 @@ export {
   isArchitecture,
   isGitGraph,
   isTreemap,
+  isSmartShape,
   isBranch,
   isCommit,
   isMerge,
@@ -35,6 +39,7 @@ export {
   GitGraphGeneratedModule,
   RadarGeneratedModule,
   TreemapGeneratedModule,
+  SmartShapeGeneratedModule,
 } from './generated/module.js';
 
 export * from './gitGraph/index.js';
@@ -45,3 +50,4 @@ export * from './pie/index.js';
 export * from './architecture/index.js';
 export * from './radar/index.js';
 export * from './treemap/index.js';
+export * from './smartshape/index.js';
