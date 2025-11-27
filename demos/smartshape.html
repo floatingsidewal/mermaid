@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartShape Diagram Demo</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    .mermaid {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 20px 0;
+    }
+    h2 {
+      color: #333;
+      border-bottom: 2px solid #4472C4;
+      padding-bottom: 10px;
+    }
+    .diagram-container {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>SmartShape Diagram Examples</h1>
+
+  <div class="diagram-container">
+    <h2>List Layout (Default)</h2>
+    <pre class="mermaid">
+smartshape
+  title My List Diagram
+  "First Item"
+  "Second Item"
+  "Third Item"
+  "Fourth Item"
+    </pre>
+  </div>
+
+  <div class="diagram-container">
+    <h2>Process Layout (Horizontal)</h2>
+    <pre class="mermaid">
+smartshape
+  type: process
+  direction: LR
+  title Sales Process
+  "Lead Generation"
+  "Qualification"
+  "Proposal"
+  "Negotiation"
+  "Close"
+    </pre>
+  </div>
+
+  <div class="diagram-container">
+    <h2>Cycle Layout</h2>
+    <pre class="mermaid">
+smartshape
+  type: cycle
+  title PDCA Cycle
+  "Plan"
+  "Do"
+  "Check"
+  "Act"
+    </pre>
+  </div>
+
+  <div class="diagram-container">
+    <h2>Pyramid Layout</h2>
+    <pre class="mermaid">
+smartshape
+  type: pyramid
+  title Maslow's Hierarchy
+  "Self-Actualization"
+  "Esteem"
+  "Love/Belonging"
+  "Safety"
+  "Physiological"
+    </pre>
+  </div>
+
+  <div class="diagram-container">
+    <h2>Hierarchy with Nesting</h2>
+    <pre class="mermaid">
+smartshape
+  type: hierarchy
+  direction: TB
+  title Organization Chart
+  "CEO"
+    "CTO"
+      "Dev Team Lead"
+      "QA Team Lead"
+    "CFO"
+      "Finance Manager"
+    "COO"
+      "Operations Manager"
+    </pre>
+  </div>
+
+  <script type="module">
+    import mermaid from '../packages/mermaid/dist/mermaid.esm.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      logLevel: 'debug',
+    });
+  </script>
+</body>
+</html>
