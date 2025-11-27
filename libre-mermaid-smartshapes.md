@@ -262,7 +262,7 @@ mermaid.registerExternalDiagrams(
 ### Non-Goals
 
 1. Full OOXML SmartArt compatibility (too complex, diminishing returns)
-2. Round-trip editing with PowerPoint
+2. Round-trip editing with PowerPoint (No external dependencies with Libre or Microsoft products!)
 3. Animation support
 4. 3D effects
 
