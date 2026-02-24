@@ -180,6 +180,7 @@ function sidebarSyntax() {
         { text: 'Architecture 🔥', link: '/syntax/architecture' },
         { text: 'Radar 🔥', link: '/syntax/radar' },
         { text: 'Treemap 🔥', link: '/syntax/treemap' },
+        { text: 'Funnel Chart 🔥', link: '/syntax/funnel' },
         { text: 'Other Examples', link: '/syntax/examples' },
       ],
     },
