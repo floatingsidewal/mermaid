@@ -10,6 +10,7 @@ import type {
   Treemap,
   Funnel,
   FunnelFlow,
+  SmartShape,
 } from './index.js';
 
 export type DiagramAST =
@@ -20,7 +21,8 @@ export type DiagramAST =
   | GitGraph
   | Radar
   | Funnel
-  | FunnelFlow;
+  | FunnelFlow
+  | SmartShape;
 
 const parsers: Record<string, LangiumParser> = {};
 const initializers = {
@@ -69,6 +71,11 @@ const initializers = {
     const parser = createFunnelFlowServices().FunnelFlow.parser.LangiumParser;
     parsers.funnelFlow = parser;
   },
+  smartshape: async () => {
+    const { createSmartShapeServices } = await import('./language/smartshape/index.js');
+    const parser = createSmartShapeServices().SmartShape.parser.LangiumParser;
+    parsers.smartshape = parser;
+  },
 } as const;
 
 export async function parse(diagramType: 'info', text: string): Promise<Info>;
@@ -80,6 +87,7 @@ export async function parse(diagramType: 'radar', text: string): Promise<Radar>;
 export async function parse(diagramType: 'treemap', text: string): Promise<Treemap>;
 export async function parse(diagramType: 'funnel', text: string): Promise<Funnel>;
 export async function parse(diagramType: 'funnelFlow', text: string): Promise<FunnelFlow>;
+export async function parse(diagramType: 'smartshape', text: string): Promise<SmartShape>;
 
 export async function parse<T extends DiagramAST>(
   diagramType: keyof typeof initializers,

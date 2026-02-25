@@ -12,6 +12,9 @@ export {
   GitGraph,
   Radar,
   Treemap,
+  SmartShape,
+  SmartShapeRow,
+  SmartShapeItem,
   Branch,
   Commit,
   Merge,
@@ -27,6 +30,9 @@ export {
   isArchitecture,
   isGitGraph,
   isTreemap,
+  isSmartShape,
+  isSmartShapeRow,
+  isSmartShapeItem,
   isBranch,
   isCommit,
   isMerge,
@@ -43,6 +49,7 @@ export {
   GitGraphGeneratedModule,
   RadarGeneratedModule,
   TreemapGeneratedModule,
+  SmartShapeGeneratedModule,
 } from './generated/module.js';
 
 export * from './gitGraph/index.js';
@@ -55,3 +62,4 @@ export * from './funnelFlow/index.js';
 export * from './architecture/index.js';
 export * from './radar/index.js';
 export * from './treemap/index.js';
+export * from './smartshape/index.js';
